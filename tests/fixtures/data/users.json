@@ -1,0 +1,30 @@
+{
+  "success": {
+    "username": "standard_user",
+    "password": "secret_sauce"
+  },
+  "bad_credential":{
+    "username": "standard_user",
+    "password": "secret_sauc"
+  },
+  "empty_password": {
+    "username": "standard_user",
+    "password": ""
+  },
+  "empty_user": {
+    "username": "",
+    "password": "secret_sauc"
+  },
+  "empty_credential": {
+    "username": "",
+    "password": ""
+  },
+  "locked_user": {
+    "username": "locked_out_user",
+    "password": "secret_sauce"
+  },
+  "error_user": {
+    "username": "error_user",
+    "password": "secret_sauce"
+  }
+}

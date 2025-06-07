@@ -1,0 +1,27 @@
+{
+  "success": {
+    "firstName": "Jhon",
+    "lastName": "Doe",
+    "zipCode": "0123"
+  },
+  "empty": {
+    "firstName": "",
+    "lastName": "",
+    "zipCode": ""
+  },
+  "empty_firstName": {
+    "firstName": "",
+    "lastName": "Doe",
+    "zipCode": "0123"
+  },
+  "empty_lastName": {
+    "firstName": "Jhon",
+    "lastName": "",
+    "zipCode": "0123"
+  },
+  "empty_zipCode": {
+    "firstName": "Jhon",
+    "lastName": "Doe",
+    "zipCode": ""
+  }
+}

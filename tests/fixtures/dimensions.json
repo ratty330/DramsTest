@@ -1,0 +1,38 @@
+{
+  "24Inch": {
+    "width": 1920,
+    "height": 1200
+  },
+  "15Inch": {
+    "width": 1366,
+    "height": 768
+  },
+  "13Inch": {
+    "width": 1024,
+    "height": 800
+  },
+  "iphone4": {
+    "width": 320,
+    "height": 480
+  },
+  "iphone5": {
+    "width": 320,
+    "height": 568
+  },
+  "iphone7": {
+    "width": 375,
+    "height": 667
+  },
+  "iphoneX": {
+    "width": 375,
+    "height": 812
+  },
+  "iphoneXr": {
+    "width": 414,
+    "height": 896
+  },
+  "samsungS10": {
+    "width": 360,
+    "height": 760
+  }
+}
