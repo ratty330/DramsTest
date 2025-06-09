@@ -1,0 +1,19 @@
+import { Locator, Page } from "playwright-core";
+import { expect } from "playwright/test";
+
+export class FooterComponent {
+  readonly page: Page;
+  readonly locatorFooter: Locator;
+  readonly locatorCopyRights: Locator;
+
+  constructor(page: Page){
+    this.page = page;
+
+    this.locatorFooter = this.page.locator('footer');
+    this.locatorCopyRights = this.locatorFooter.getByText('© 2023 Sauce Labs. All Rights');
+  }
+
+  validateDefaultLayout = async () => {
+    await expect(this.locatorCopyRights).toBeVisible();
+  }
+} 

@@ -1,0 +1,83 @@
+import test, { expect } from "@playwright/test";
+import { CartPage } from '../pages/CartPage';
+import data from '../fixtures/data/cart.json';
+import dataCheckout from '../fixtures/data/checkout.json';
+import { InventoryPage } from "../pages/InventoryPage";
+import { IProduct, SortOptions } from "../fixtures/models";
+import { CheckoutStepOnePage } from "../pages/CheckoutStepOnePage";
+import { CheckoutStepTwoPage } from "../pages/CheckoutStepTwoPage";
+import { CheckoutCompletePage } from "../pages/CheckoutCompletePage";
+
+let inventoryPage: InventoryPage;
+let cartPage: CartPage;
+
+test.beforeEach(async ({page}) => {
+  inventoryPage = new InventoryPage(page);
+  await inventoryPage.visit();
+});
+
+test.describe('Shopper Flow', () => {
+  test('Should list by Price (Low to High)', async () => {
+    await inventoryPage.sort(SortOptions.LoHi);
+  });
+  test('Should list by Price (High to Low)', async () => {
+    await inventoryPage.sort(SortOptions.HiLo);
+  });
+
+  test('Should add to cart the cheapest item and then remove from cart', async () => {
+    // Find the cheapest item (Sauce Labs Onesie at $7.99)
+    const cheapestItem = inventoryPage.items.find(item => item.price === 7.99);
+    if (!cheapestItem) {
+      throw new Error('Cheapest item not found');
+    }
+    
+    await cheapestItem.addToCart();
+    await cheapestItem.removeFromCart();
+  });
+
+  test('Should open basket and proceed to checkout', async ({ page }) => {
+    inventoryPage = new InventoryPage(page);
+    cartPage = new CartPage(page, [data[1], data[2], data[3]]);
+  
+    await inventoryPage.visit();
+    await inventoryPage.items[0].addToCart();
+    await inventoryPage.items[2].addToCart();
+    await inventoryPage.items[4].addToCart();
+    await inventoryPage.header.visitCart();
+    await cartPage.toBe();
+    await cartPage.checkout();
+  });
+  
+  test('Should checkout and go back home', async ({page}) => {
+    const checkoutOnePage = new CheckoutStepOnePage(page);
+    const checkoutTwoPage = new CheckoutStepTwoPage(page, [data[1], data[2], data[3]]);
+    const checkoutCompletePage = new CheckoutCompletePage(page);
+    cartPage = new CartPage(page, [data[1], data[2], data[3]]);
+    await inventoryPage.visit();
+    await inventoryPage.items[0].addToCart();
+    await inventoryPage.items[2].addToCart();
+    await inventoryPage.items[4].addToCart();
+    await inventoryPage.header.visitCart();
+    await cartPage.checkout();
+    await checkoutOnePage.form.fill(dataCheckout.success);
+    await checkoutOnePage.form.submit();
+    await checkoutTwoPage.toBe();
+
+    const totalItem = data[1].product.price + data[2].product.price + data[3].product.price;
+    const taxItem = Math.round((totalItem * 0.08) * 100) / 100;
+    const total = totalItem + taxItem;
+
+    console.log(totalItem);
+    console.log(taxItem);
+    console.log(total);
+
+    await checkoutTwoPage.itemPrice(totalItem.toString());
+    await checkoutTwoPage.taxPrice(taxItem.toString());
+    await checkoutTwoPage.totalPrice(total.toString());
+
+    await checkoutTwoPage.finish();
+    await checkoutCompletePage.toBe();
+    await checkoutCompletePage.backHome();
+    await inventoryPage.toBe();
+  });
+}); 
